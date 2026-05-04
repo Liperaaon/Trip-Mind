@@ -2,60 +2,78 @@
 
 # ✈️ TripPlanner
 
-**O seu companheiro de viagem definitivo. Construído na Web, desenhado para o seu bolso.**
+**Arquitetura Web Moderna Aplicada à Experiência Mobile Nativa**
 
-[![Status](https://img.shields.io/badge/Status-WIP%20(Em%20Desenvolvimento)-FF9900?style=flat-square)](#)
-[![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)](#)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](#)
-[![Mobile Ready](https://img.shields.io/badge/Mobile-iOS%20%7C%20Android-black?style=flat-square&logo=apple)](#)
+[![Status](https://img.shields.io/badge/Status-Em_Desenvolvimento-FF9900?style=for-the-badge)](#)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](#)
+[![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=leaflet&logoColor=white)](#)
 
-<img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1000&q=80" alt="App Preview em um iPhone" width="800" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin: 20px 0;" />
-
-*O TripPlanner traz uma interface minimalista e fluida para organizar o seu roteiro dia-a-dia, explorar mapas e guardar memórias.*
+<img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&q=80" alt="App Preview" width="100% border-radius: 16px; box-shadow: 0 4px 30px rgba(0,0,0,0.1);" />
 
 </div>
 
----
+## 📖 Sobre o Projeto
 
-## 💡 A Visão
+O **TripPlanner** é uma aplicação focada no planeamento completo de viagens. Construído como uma *Single Page Application* (SPA), o seu principal diferencial é a UI/UX rigorosamente arquitetada para replicar a sensação de uma aplicação móvel nativa[cite: 1, 7], preparando o terreno para uma futura compilação mobile (Android/iOS).
 
-Por que construir mais um site se podemos ter a fluidez de um app nativo? O TripPlanner nasceu como uma aplicação web (`React` + `Tailwind`), mas a sua alma é 100% mobile. 
-
-A arquitetura de UI foi desenhada com atenção obsessiva aos detalhes nativos:
-* 🤌 **Touch-First:** Microinterações (`active:scale`), `BottomNav` acessível com o polegar e sem scrollbars poluindo a tela[cite: 1, 7].
-* 📱 **Safe Areas:** Respeito absoluto aos *notches* e barras de gestos (`env(safe-area-inset-bottom)`) do iOS e Android[cite: 2, 3, 4, 7].
-* 🎯 **Roadmap Mobile:** O código está estruturado para, num futuro próximo, ser empacotado como **APK** e **App iOS** nativos.
+O objetivo deste projeto é demonstrar o domínio sobre o ecossistema React moderno, incluindo gestão de estado complexa, integração de mapas em tempo real, consumo de APIs externas e construção de interfaces fluídas com Tailwind CSS.
 
 ---
 
-## ✨ Features em Destaque
+## 🏗️ Decisões Arquiteturais e Engenharia
 
-| 🧭 **Dashboard Inteligente** | 🗺️ **Mapas Dinâmicos** |
-| :--- | :--- |
-| Interface limpa com resumo do dia e progresso de atividades. Base preparada para futuras dicas via IA[cite: 3]. | Integração nativa com geolocalização, controle de câmera suave e busca de POIs em tempo real[cite: 5]. |
+Para garantir escalabilidade e manutenção, o projeto adota padrões sólidos de engenharia de software:
 
-| 📅 **Planner Intuitivo** | 🪄 **Setup Rápido** |
-| :--- | :--- |
-| Roteiro dia-a-dia categorizado visualmente. Edição rápida, checklists e anotações ricas[cite: 4]. | Wizard de 4 passos com auto-complete global de cidades via API Nominatim (OpenStreetMap)[cite: 9]. |
+### 1. Separação de Responsabilidades (SoC)
+A interface de utilizador está estritamente separada da lógica de negócios e persistência de dados. Interações com a base de dados ou APIs externas são isoladas na camada `services/`[cite: 3, 4], permitindo que os componentes visuais permaneçam limpos e focados apenas na renderização.
+
+### 2. Gestão de Estado Global com Context API
+Em vez de prop-drilling excessivo, o estado da aplicação (sessão do utilizador, viagem ativa, viagens guardadas) é gerido centralmente através do `AppContext`[cite: 1, 2, 3]. Isso garante que os dados estejam disponíveis instantaneamente e de forma sincronizada entre as diferentes *Tabs* do utilizador.
+
+### 3. Padrão "App Shell"
+O `App.jsx` implementa o padrão *App Shell*, controlando os fluxos de autenticação e garantindo que o núcleo da interface (Shell) só é carregado e renderizado quando a sessão do utilizador é validada, exibindo uma *splash screen* durante a verificação[cite: 1].
+
+### 4. Otimização de Performance
+* **Dynamic Imports:** Funcionalidades pesadas ou específicas (como funções de exclusão no `HomeTab`) são importadas dinamicamente (`await import(...)`) para evitar o inchaço do *bundle* principal no carregamento inicial[cite: 3].
+* **Debouncing na API:** O modal de pesquisa de destinos implementa um *debounce* customizado (através de `useRef` e `setTimeout`) nas chamadas à API do Nominatim, poupando requisições de rede e evitando rate-limiting enquanto o utilizador digita[cite: 9].
 
 ---
 
-## 🛠️ Tech Stack & Arquitetura
+## 📱 UX/UI e Desenvolvimento Mobile-First
 
-Sob o capô, o projeto mantém uma estrutura escalável e componentizada[cite: 1, 7, 8, 9, 10]:
+A aplicação foi desenvolvida sob o paradigma *mobile-first*, com foco absoluto na experiência tátil:
 
-- **Core:** React (Hooks, Context API).
-- **Styling:** Tailwind CSS (focado em Glassmorphism, transições fluidas e paletas tonais).
-- **Maps:** `react-leaflet` turbinado com OpenStreetMap[cite: 5, 9].
-- **Backend (WIP):** Estrutura de *Services* pronta para plugar o Firebase (Auth, Firestore).
+* **Padrões de Navegação:** Implementação de uma *Bottom Navigation Bar* flutuante e *Safe Areas* (`env(safe-area-inset-bottom)`) para evitar conflitos com a barra de gestos nativa dos sistemas iOS e Android[cite: 7].
+* **Prevenção de Comportamentos Web:** Remoção completa de *scrollbars* (`no-scrollbar`) e desativação do *tap-highlight* do navegador (`-webkit-tap-highlight-color: transparent`) para eliminar o aspecto de website e reforçar a perceção de app[cite: 1].
+* **Microinterações:** Uso extensivo de animações de transição, *scale* em interações de toque ativo (`active:scale`) e renderização condicional suave de modais e popovers[cite: 3, 7].
 
-<details>
-<summary>📂 <b>Ver estrutura de pastas</b></summary>
+---
+
+## ✨ Features Principais
+
+1. **Dashboard Inteligente (Home):** Resumo visual do dia, barra de progresso de atividades dinâmicas e preparação para integração de comandos via Inteligência Artificial[cite: 3].
+2. **Geolocalização Interativa (Mapas):** Integração com `React-Leaflet` com marcadores HTML customizados, controlo da câmara para seguir a localização do utilizador em tempo real e pesquisa de Pontos de Interesse[cite: 5].
+3. **Planeador de Itinerários:** Gestão CRUD completa de roteiros por dia, com categorias de atividades, horários e inputs expansíveis para detalhes adicionais[cite: 4].
+4. **Wizard de Criação de Viagem:** Um fluxo de formulário de múltiplas etapas (Continente ➔ Destino ➔ Datas ➔ Orçamento) usando a API de geocodificação do OpenStreetMap para autocomplete de cidades a nível mundial[cite: 9].
+
+---
+
+## 💻 Tech Stack
+
+* **Ecossistema Core:** React.js, Context API, Hooks (useState, useEffect, useCallback, useRef)
+* **Estilização & UI:** Tailwind CSS, Lucide React (Ícones)
+* **Mapas & Dados:** Leaflet, React-Leaflet, OpenStreetMap API (Nominatim)
+* **Estrutura Backend (Em Integração):** Preparado para arquitetura Serverless via Firebase (Autenticação, Firestore)
+
+---
+
+## 📂 Estrutura de Diretórios
 ```text
 src/
-├── components/       # Componentes burros/UI (BottomNav, Modal, Widgets)
-├── context/          # Estado global da viagem e do usuário
-├── screens/          # Views fullscreen (Auth)
-├── services/         # API wrappers (tripService, authService)
-├── tabs/             # O coração do app (Home, Itinerary, Map, Profile)
-└── App.jsx           # Entry point com roteamento condicional
+├── components/       # Componentes isolados e reutilizáveis (BottomNav, Modals, Widgets)
+├── context/          # Provedores de contexto para estado global (AppContext)
+├── screens/          # Telas completas de fluxo independente (AuthScreen)
+├── services/         # Wrappers de integração externa e regras de negócio (API/DB)
+├── tabs/             # Core views da navegação inferior (Home, Itinerary, Map, etc.)
+└── App.jsx           # Roteamento condicional e App Shell
